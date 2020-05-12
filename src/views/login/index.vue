@@ -128,6 +128,9 @@ export default {
         this.$router.push('/my')
         this.$toast.success('登录成功')
 
+        // 登录成功, 跳转到原来的界面
+        this.$router.back()
+
         // 将后端返回的用户登录状态 (token等数据) 放到 Vuex 容器中
         this.$store.commit('setUser', data.data)
       } catch (err) {
