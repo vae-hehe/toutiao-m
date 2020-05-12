@@ -25,10 +25,10 @@ export const sendSms = mobile => {
 export const getCurrentUser = () => {
   return request({
     method: 'GET',
-    url: '/app/v1_0/user',
-    headers: {
-      Authorization: `Bearer ${store.state.user.token}`
-    }
+    url: '/app/v1_0/user'
+    // headers: {
+    //   Authorization: `Bearer ${store.state.user.token}`
+    // }
   })
 }
 
