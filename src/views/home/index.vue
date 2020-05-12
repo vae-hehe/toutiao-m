@@ -1,5 +1,6 @@
 <template>
 <div class="home-container">
+  <!-- 导航栏 -->
   <van-nav-bar class="app-nav-bar">
     <van-button
       class="search-btn"
@@ -11,22 +12,42 @@
     > 搜索
     </van-button>
   </van-nav-bar>
+  <!-- /导航栏 -->
+
+  <!-- 文章频道列表 -->
+  <van-tabs v-model="active">
+    <van-tab v-for="channel in channels" :key="channel.id" :title="channel.name">{{ channel.name }}内容</van-tab>
+  </van-tabs>
+  <!-- /文章频道列表 -->
+
 </div>
 </template>
 
 <script>
+import { getUserChannels } from '@/api/user'
 export default {
   name: 'HomeIndex',
   components: {},
   props: {},
   data () {
-    return {}
+    return {
+      active: 2,
+      channels: []
+    }
   },
   computed: {},
   watch: {},
-  created () {},
+  created () {
+    this.loadChannels()
+  },
   mounted () {},
-  methods: {}
+  methods: {
+    async loadChannels () {
+      const { data } = await getUserChannels()
+      console.log(data)
+      this.channels = data.data.channels
+    }
+  }
 }
 </script>
 
