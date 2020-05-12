@@ -13,9 +13,9 @@
         slot="icon"
         round
         fit="cover"
-        src="https://img.yzcdn.cn/vant/cat.jpeg"
+        :src="currentUser.photo"
       />
-      <div slot="title" class="name">昵称</div>
+      <div slot="title" class="name">{{ currentUser.name }}</div>
       <van-button
         class="update-btn"
         size="small"
@@ -25,26 +25,26 @@
     <van-grid class="data-info" :border="false">
       <van-grid-item class="data-info-item">
         <div class="text-wrap" slot="text">
-          <div class="count">123</div>
+          <div class="count">{{ currentUser.art_count }}</div>
           <div class="text">头条</div>
         </div>
       </van-grid-item>
       <van-grid-item  class="data-info-item">
         <div class="text-wrap" slot="text">
-          <div class="count">123</div>
+          <div class="count">{{ currentUser.follow_count }}</div>
           <div class="text">关注</div>
         </div>
       </van-grid-item>
       <van-grid-item class="data-info-item">
         <div class="text-wrap" slot="text">
-          <div class="count">123</div>
+          <div class="count">{{ currentUser.fans_count }}</div>
           <div class="text">粉丝</div>
         </div>
       </van-grid-item>
       <van-grid-item class="data-info-item">
         <div class="text-wrap" slot="text">
-          <div class="count">123</div>
-          <div class="text">头条</div>
+          <div class="count">{{ currentUser.like_count }}</div>
+          <div class="text">点赞</div>
         </div>
       </van-grid-item>
     </van-grid>
@@ -52,20 +52,20 @@
 
   <div v-else class="not-login">
     <div @click="$router.push('/login')">
-      <img class="mobile" src="./1.jpg" alt="">
+      <img class="mobile" src="./head.png" alt="">
     </div>
     <div class="text">登录 / 注册</div>
   </div>
 
   <van-grid class="nav-grid mb-4" :column-num="2">
     <van-grid-item
-      class="nav-grid-item"
+      class="nav-grid-item shoucang"
       icon-prefix="toutiao"
       icon="shoucang"
       text="收藏"
     />
     <van-grid-item
-      class="nav-grid-item"
+      class="nav-grid-item lishi"
       icon-prefix="toutiao"
       icon="lishi"
       text="历史"
@@ -80,19 +80,24 @@
 
 <script>
 import { mapState } from 'vuex'
+import { getCurrentUser } from '@/api/user'
 
 export default {
   name: 'MyIndex',
   components: {},
   props: {},
   data () {
-    return {}
+    return {
+      currentUser: {}
+    }
   },
   computed: {
     ...mapState(['user'])
   },
   watch: {},
-  created () {},
+  created () {
+    this.onLoadCurrentUser()
+  },
   mounted () {},
   methods: {
     onLogout () {
@@ -107,6 +112,11 @@ export default {
         .catch(() => { // 退出执行
           // on cancel
         })
+    },
+    async onLoadCurrentUser () {
+      const { data } = await getCurrentUser()
+      console.log(data)
+      this.currentUser = data.data
     }
   }
 }
@@ -116,7 +126,7 @@ export default {
 <style scoped lang="less">
 .my-container {
   .my-info {
-    background: url() no-repeat;
+    background: url(./banner.png) no-repeat;
     background-size: cover;
     .base-info {
       box-sizing: border-box;
@@ -184,16 +194,16 @@ export default {
       /deep/ .toutiao {
         font-size: 22px;
       }
-      .toutiao-shoucang {
-        color: #eb5253;
-      }
-      .toutiao-lishi {
-        color: #ff9d1d;
-      }
       .van-grid-item__text {
         font-size: 14px;
         color: #333;
       }
+    }
+    .shoucang {
+      color: #eb5253;
+    }
+    .lishi {
+      color: #ff9d1d;
     }
   }
   .cell {
@@ -206,6 +216,9 @@ export default {
   }
   .mb-4 {
     margin-bottom: 4px;
+  }
+  .not-login {
+    background: url(./banner.png) no-repeat;
   }
 }
 </style>
