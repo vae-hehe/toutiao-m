@@ -16,6 +16,9 @@ import './styles/index.less'
 // 自动设置 rem 基准值 (html 标签字体大小)
 import 'amfe-flexible'
 
+// 加载dayjs
+import './utils/dayjs'
+
 // 全局注册 Vant 中的组件
 Vue.use(Vant)
 
