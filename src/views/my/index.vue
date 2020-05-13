@@ -96,7 +96,10 @@ export default {
   },
   watch: {},
   created () {
-    this.onLoadCurrentUser()
+    // 获取用户信息时, 判断是否已经登录
+    if (this.user) {
+      this.onLoadCurrentUser()
+    }
   },
   mounted () {},
   methods: {
