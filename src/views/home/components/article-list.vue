@@ -1,13 +1,20 @@
 <template>
 <div class="article-list">
-  <van-list
-    v-model="loading"
-    :finished="finished"
-    finished-text="没有更多了"
-    @load="onLoad"
+  <van-pull-refresh
+    :success-text="refreshSuccessText"
+    :success-duration="1500"
+    v-model="isFreshLoading"
+    @refresh="onRefresh"
   >
-    <van-cell v-for="article in articles" :key="article.index" :title="article.title" />
-  </van-list>
+    <van-list
+      v-model="loading"
+      :finished="finished"
+      finished-text="没有更多了"
+      @load="onLoad"
+    >
+      <van-cell v-for="article in articles" :key="article.index" :title="article.title" />
+    </van-list>
+  </van-pull-refresh>
 </div>
 </template>
 
@@ -27,7 +34,9 @@ export default {
       articles: [], // 数据列表
       loading: false, // 控制加载中的 loading 状态
       finished: false, // 控制加载结束的状态, 为 true 的时候, 不再触发加载更多
-      timestamp: null
+      timestamp: null,
+      isFreshLoading: false,
+      refreshSuccessText: ''
     }
   },
   computed: {},
@@ -59,6 +68,21 @@ export default {
         // 数据全部加载结束了, 不再触发加载更多
         this.finished = true
       }
+    },
+    async onRefresh () {
+      // 请求获取数据
+      const { data } = await getArticles({
+        channel_id: this.channel.id,
+        timestamp: Date.now(), // 时间戳, 相当于页码, 最新时间戳获取方式: +new Date() / Date.now() 下拉刷新永远传最新时间戳, 而且数据不为空
+        with_top: 1 // 是否包含置顶, 1 包含, 0 不包含
+      })
+      // 把数据放到数据列表中 (往顶部追加unshif)
+      const { results } = data.data
+      this.articles.unshift(...results)
+      // 关闭刷新的状态, 不关闭会一直转
+      this.isFreshLoading = false
+
+      this.refreshSuccessText = `更新了${results.length}条数据`
     }
   }
 }

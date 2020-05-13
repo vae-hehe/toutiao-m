@@ -178,7 +178,7 @@ export default {
   }
   .not-login {
     height: 180px;
-    background: url() no-repeat;
+    background: url(./banner.png) no-repeat;
     background-size: cover;
     display: flex;
     flex-direction: column;
@@ -218,9 +218,6 @@ export default {
   }
   .mb-4 {
     margin-bottom: 4px;
-  }
-  .not-login {
-    background: url(./banner.png) no-repeat;
   }
 }
 </style>
