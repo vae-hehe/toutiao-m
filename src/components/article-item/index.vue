@@ -1,8 +1,10 @@
 <template>
 <div>
   <van-cell class="article-item">
-    <div class="title" slot="title">{{ article.title }}</div>
+    <!-- van-multi-ellipsis--l3 标题过长, 只显示三行 -->
+    <div class="title van-multi-ellipsis--l3" slot="title">{{ article.title }}</div>
     <div slot="label">
+      <!-- 三图设置在label插槽中 -->
       <div
         class="cover-wrap"
         v-if="article.cover.type === 3"
@@ -19,17 +21,16 @@
           />
         </div>
       </div>
-      <div class="lable-wrap">
-        <span>{{ article.aut_name }} </span>
-        <span>{{ article.comm_count }}个评论 </span>
+      <div class="label-wrap">
+        <span>{{ article.aut_name }}</span>
+        <span>{{ article.comm_count }}个评论</span>
         <span>{{ article.pubdate | relativeTime }}</span>
       </div>
     </div>
     <!-- 默认插槽名字是default ,可以省略 -->
     <van-image
+      class="right-cover"
       v-if="article.cover.type === 1"
-      width="116"
-      height="73"
       fit="cover"
       :src="article.cover.images[0]"
     />
@@ -88,12 +89,12 @@ export default {
         height: 73px;
       }
     }
-    .lable-wrap {
-      font-size: 11px;
-      color: #b4b4b4;
-      span {
-        margin-right: 12px;
-      }
+  }
+  .label-wrap {
+    font-size: 11px;
+    color: #b4b4b4;
+    span {
+      margin-right: 12px;
     }
   }
 }
