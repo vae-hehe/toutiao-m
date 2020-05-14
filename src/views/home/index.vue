@@ -41,7 +41,14 @@
   >
   <!-- 把内容封装成组件 -->
   <!-- 父组件--频道列表传给子组件 -->
-  <channel-edit :user-channels="channels"></channel-edit>
+  <!-- 子组件和父组件之间的通信, 子组件传递数据, 父组件自定义事件 -->
+  <!-- 通过激活active, 改变频道的切换 -->
+  <channel-edit
+    :user-channels="channels"
+    @close="isChannelEditShow = false"
+    @update-active="active = $event"
+  >
+  </channel-edit>
   </van-popup>
   <!-- 弹出层 -->
 </div>

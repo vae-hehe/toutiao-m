@@ -131,8 +131,12 @@ export default {
       // 数据持久化
     },
     // 切换频道
+    // 使用子组件和父组件之间的通信
     switchChannel (index) {
-      console.log(11)
+      // 切换频道
+      this.$emit('update-active', index)
+      // 关闭弹出层
+      this.$emit('close')
     }
   }
 }
