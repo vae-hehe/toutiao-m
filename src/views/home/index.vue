@@ -43,7 +43,10 @@
   <!-- 父组件--频道列表传给子组件 -->
   <!-- 子组件和父组件之间的通信, 子组件传递数据, 父组件自定义事件 -->
   <!-- 通过激活active, 改变频道的切换 -->
+  <!-- 模板中的$event 事件参数 -->
+  <!-- 传递 active -->
   <channel-edit
+    :active="active"
     :user-channels="channels"
     @close="isChannelEditShow = false"
     @update-active="active = $event"
@@ -58,6 +61,8 @@
 import { getUserChannels } from '@/api/user'
 import ArticleList from './components/article-list'
 import ChannelEdit from '@/components/channel-edit/'
+import { mapState } from 'vuex'
+import { getItem } from '@/utils/storage'
 export default {
   name: 'HomeIndex',
   components: {
@@ -72,7 +77,9 @@ export default {
       isChannelEditShow: false // 控制频道编辑的显示状态
     }
   },
-  computed: {},
+  computed: {
+    ...mapState(['user'])
+  },
   watch: {},
   created () {
     this.loadChannels()
@@ -80,9 +87,30 @@ export default {
   mounted () {},
   methods: {
     async loadChannels () {
-      const { data } = await getUserChannels()
-      console.log(data)
-      this.channels = data.data.channels
+      // 判断用户是不是已经登录
+      let channels = []
+      if (this.user) {
+        // 用户已经登录, 请求线上的用户频道数据列表
+        const { data } = await getUserChannels()
+        channels = data.data.channels
+      } else {
+        // 用户没有登录, 判断本地有没有数据列表, 有就获取本地的数据列表, 没有就获取默认推荐的数据列表
+        const localChannels = getItem('user-channels')
+
+        // 如果本地有数据,则使用本地的频道列表
+        if (localChannels) {
+          channels = localChannels
+        } else {
+          // 本地没有数据, 使用默认的频道列表
+          const { data } = await getUserChannels()
+          channels = data.data.channels
+        }
+      }
+      this.channels = channels
+      // 获取用户的频道列表
+      // const { data } = await getUserChannels()
+      // console.log(data)
+      // this.channels = data.data.channels
     }
   }
 }
