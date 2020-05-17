@@ -1,20 +1,62 @@
 <template>
-<div class="search-container"></div>
+<div class="search-container">
+  <!-- 搜索栏 -->
+  <form action="/">
+    <van-search
+       v-model="searchText"
+       placeholder="请输入搜索关键词"
+       show-action
+       @search="onSearch"
+       @cancel="$router.back()"
+       @focus="isResultShow = false"
+    />
+  </form>
+  <!-- /搜索栏 -->
+
+  <!-- 搜索结果 -->
+  <search-result v-if="isResultShow"></search-result>
+  <!-- /搜索结果 -->
+
+  <!-- 联想建议 -->
+  <search-suggestion
+    v-else-if="searchText" :searchText="searchText"
+  ></search-suggestion>
+  <!-- /联想建议 -->
+
+  <!-- 历史记录 -->
+  <search-history v-else></search-history>
+  <!-- /历史记录 -->
+</div>
 </template>
 
 <script>
+import SearchSuggestion from './components/search-suggestion'
+import SearchHistory from './components/search-history'
+import SearchResult from './components/search-result'
 export default {
   name: 'SearchIndex',
-  components: {},
+  components: {
+    SearchSuggestion,
+    SearchHistory,
+    SearchResult
+  },
   props: {},
   data () {
-    return {}
+    return {
+      searchText: '', // 搜索输入框的内容
+      isResultShow: false
+    }
   },
   computed: {},
   watch: {},
   created () {},
   mounted () {},
-  methods: {}
+  methods: {
+    onSearch () {
+      console.log(1)
+      this.isResultShow = true
+    }
+  }
 }
 </script>
 
