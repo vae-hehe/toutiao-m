@@ -11,7 +11,9 @@
       <van-icon name="delete" />
     </van-cell>
     <van-cell
-      title="hello"
+      v-for="(item, index) in searchHistories"
+      :key="index"
+      :title="item"
     >
       <van-icon name="close" />
     </van-cell>
@@ -22,7 +24,12 @@
 export default {
   name: 'SearchHistory',
   components: {},
-  props: {},
+  props: {
+    searchHistories: {
+      type: Array,
+      required: true
+    }
+  },
   data () {
     return {}
   },

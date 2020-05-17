@@ -6,7 +6,7 @@
        v-model="searchText"
        placeholder="请输入搜索关键词"
        show-action
-       @search="onSearch"
+       @search="onSearch(searchText)"
        @cancel="$router.back()"
        @focus="isResultShow = false"
     />
@@ -23,11 +23,12 @@
   <!-- 联想建议 -->
   <search-suggestion
     v-else-if="searchText" :searchText="searchText"
+    @search="onSearch"
   ></search-suggestion>
   <!-- /联想建议 -->
 
   <!-- 历史记录 -->
-  <search-history v-else></search-history>
+  <search-history v-else :searchHistories="searchHistories"></search-history>
   <!-- /历史记录 -->
 </div>
 </template>
@@ -36,6 +37,10 @@
 import SearchSuggestion from './components/search-suggestion'
 import SearchHistory from './components/search-history'
 import SearchResult from './components/search-result'
+import { getSearchHistories } from '@/api/search'
+import { setItem, getItem } from '@/utils/storage'
+import { mapState } from 'vuex'
+// import searchHistoryVue from './components/search-history.vue'
 export default {
   name: 'SearchIndex',
   components: {
@@ -47,17 +52,46 @@ export default {
   data () {
     return {
       searchText: '', // 搜索输入框的内容
-      isResultShow: false
+      isResultShow: false,
+      searchHistories: [] // 搜索历史数据
     }
   },
-  computed: {},
+  computed: {
+    ...mapState(['user'])
+  },
   watch: {},
-  created () {},
+  created () {
+    this.loadSearchHistories()
+  },
   mounted () {},
   methods: {
-    onSearch () {
-      console.log(1)
+    onSearch (searchText) {
+      // 把输入框设置为要搜索的文本
+      this.searchText = searchText
+
+      const index = this.searchHistories.indexOf(searchText)
+      if (index !== -1) {
+        // 把重复项删除
+        this.searchHistories.splice(index, 1)
+      }
+
+      // 记录搜索历史记录, 最新的在前面
+      this.searchHistories.unshift(searchText)
+
+      setItem('search-histories', this.searchHistories)
+      console.log(this.searchHistories)
+
+      // 展示搜索结果
       this.isResultShow = true
+    },
+    // 数据合并 并 去重
+    async loadSearchHistories () {
+      let searchHistories = getItem('search-histories') || []
+      if (this.user) {
+        const { data } = await getSearchHistories()
+        searchHistories = [...new Set([...searchHistories, ...data.data.keywords])]
+      }
+      this.searchHistories = searchHistories
     }
   }
 }
