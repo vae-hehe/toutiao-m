@@ -125,7 +125,7 @@ export default {
         // 4. 处理相应结果
         console.log(data)
         // 或者不用加载 Toast, 使用 this.$toast 方法也可以
-        this.$router.push('/my')
+        // this.$router.push('/my')
         this.$toast.success('登录成功')
 
         // 将后端返回的用户登录状态 (token等数据) 放到 Vuex 容器中
