@@ -2,10 +2,11 @@
 <div class="search-suggestion">
   <van-cell
     icon="search"
-    :title="str"
     v-for="(str, index) in suggestions"
     :key="index"
-  ></van-cell>
+  >
+    <div slot="title" v-html="highlightstr(str)"></div>
+  </van-cell>
 </div>
 </template>
 
@@ -47,7 +48,18 @@ export default {
   },
   created () {},
   mounted () {},
-  methods: {}
+  methods: {
+    highlightstr (str) {
+      // 正则表达式里面的内容都会当做正则匹配模式字符来对待
+      // RegExp 是正则表达式的原生js语法
+      // 参数1: 字符串
+      // 参数2: 匹配模式
+      // 返回值: 正则对象
+      return str.replace(
+        new RegExp(this.searchText, 'gi'), `<span style="color: red">${this.searchText}</span>`
+      )
+    }
+  }
 }
 </script>
 
