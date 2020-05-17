@@ -14,7 +14,10 @@
   <!-- /搜索栏 -->
 
   <!-- 搜索结果 -->
-  <search-result v-if="isResultShow"></search-result>
+  <search-result
+    v-if="isResultShow"
+    :searchText="searchText"
+  ></search-result>
   <!-- /搜索结果 -->
 
   <!-- 联想建议 -->
