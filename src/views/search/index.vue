@@ -32,6 +32,7 @@
     v-else
     :searchHistories="searchHistories"
     :search="onSearch"
+    @update-histories="searchHistories = $event"
   ></search-history>
   <!-- /历史记录 -->
 </div>
@@ -63,7 +64,11 @@ export default {
   computed: {
     ...mapState(['user'])
   },
-  watch: {},
+  watch: {
+    searchHistories () {
+      setItem('search-histories', this.searchHistories)
+    }
+  },
   created () {
     this.loadSearchHistories()
   },
@@ -82,7 +87,7 @@ export default {
       // 记录搜索历史记录, 最新的在前面
       this.searchHistories.unshift(searchText)
 
-      setItem('search-histories', this.searchHistories)
+      // setItem('search-histories', this.searchHistories)
       console.log(this.searchHistories)
 
       // 展示搜索结果
