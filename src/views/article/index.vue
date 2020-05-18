@@ -8,18 +8,20 @@
     @click-left="$router.back()"
   />
   <!-- 导航栏 -->
+
+  <div class="article-wrap">
   <!-- 用户 -->
-  <h1 class="title">{{ article.title }}</h1>
-  <van-cell center class="usesr-info">
-    <div slot="title" class="name">{{ article.aut_name }}</div>
-    <van-image
+    <h1 class="title">{{ article.title }}</h1>
+    <van-cell center class="usesr-info">
+      <div slot="title" class="name">{{ article.aut_name }}</div>
+      <van-image
       slot="icon"
       class="avatar"
       round
       :src="article.aut_photo"
-    ></van-image>
-    <div slot="label" class="pubdate">{{ article.pubdate | relativeTime }}</div>
-    <van-button
+      ></van-image>
+      <div slot="label" class="pubdate">{{ article. pubdate | relativeTime }}</div>
+      <van-button
       class="follow-btn"
       round
       size="mini"
@@ -27,18 +29,23 @@
       :icon="article.is_followed ? '' : 'plus'"
       :loading="isFollowedLoading"
       @click="onFollowed"
-    >{{ article.is_followed ? '已关注' : '关注' }}</van-button>
-  </van-cell>
+      >{{ article.is_followed ? '已关注' : '关注' }}</van-button>
+    </van-cell>
   <!-- /用户 -->
 
   <!-- 正文 -->
-  <!-- 不能使用 花括号绑定, 使用v-html绑定有格式的数据 html格式的字符串 -->
-  <div
-    class="markdown-body"
-    v-html="article.content"
-    ref="article-content"
-  ></div>
+    <!-- 不能使用 花括号绑定, 使用v-html绑定有格式的数据 html格式的字符串 -->
+    <div
+      class="markdown-body"
+      v-html="article.content"
+      ref="article-content"
+    ></div>
   <!-- /正文 -->
+
+  <!-- 文章评论列表 -->
+  <comment-list :source="articleId"></comment-list>
+  <!-- /文章评论列表 -->
+  </div>
 
   <!-- 底部 -->
   <div class="footer">
@@ -68,10 +75,13 @@ import { getArticleById, getCollect, deleteCollect, getLike, deleteLike } from '
 // 预览图片
 import { ImagePreview } from 'vant'
 import { deleteFollow, getFollow } from '@/api/user'
+import CommentList from './components/comment-list'
 
 export default {
   name: 'ArticleIndex',
-  components: {},
+  components: {
+    CommentList
+  },
   // 在组件中获取动态路由参数
   // 方式一: this.$router.params.articleId
   // 方式二: props 传参
@@ -177,6 +187,14 @@ ul {
 .markdown-body {
   padding: 14px;
   background-color: #fff;
+}
+.article-wrap {
+  position: fixed;
+  top: 46px;
+  bottom: 45px;
+  left: 0;
+  right: 0;
+  overflow-y: auto;
 }
 .title {
   font-size: 20px;
