@@ -1,6 +1,14 @@
 <template>
 <div>
-  <van-cell class="article-item">
+  <van-cell
+    class="article-item"
+    :to="{
+      name: 'article',
+      params: {
+        articleId: article.art_id
+      }
+    }"
+  >
     <!-- van-multi-ellipsis--l3 标题过长, 只显示三行 -->
     <div class="title van-multi-ellipsis--l3" slot="title">{{ article.title }}</div>
     <div slot="label">
