@@ -31,3 +31,11 @@ export const getSearchHistories = () => {
     url: '/app/v1_0/search/histories'
   })
 }
+
+// 删除搜索历史
+export const deleteSearchHistories = () => {
+  return request({
+    method: 'GET',
+    url: '/app/v1_0/search/histories'
+  })
+}

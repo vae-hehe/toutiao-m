@@ -28,7 +28,11 @@
   <!-- /联想建议 -->
 
   <!-- 历史记录 -->
-  <search-history v-else :searchHistories="searchHistories"></search-history>
+  <search-history
+    v-else
+    :searchHistories="searchHistories"
+    :search="onSearch"
+  ></search-history>
   <!-- /历史记录 -->
 </div>
 </template>
@@ -37,7 +41,7 @@
 import SearchSuggestion from './components/search-suggestion'
 import SearchHistory from './components/search-history'
 import SearchResult from './components/search-result'
-import { getSearchHistories } from '@/api/search'
+// import { getSearchHistories } from '@/api/search'
 import { setItem, getItem } from '@/utils/storage'
 import { mapState } from 'vuex'
 // import searchHistoryVue from './components/search-history.vue'
@@ -86,11 +90,11 @@ export default {
     },
     // 数据合并 并 去重
     async loadSearchHistories () {
-      let searchHistories = getItem('search-histories') || []
-      if (this.user) {
-        const { data } = await getSearchHistories()
-        searchHistories = [...new Set([...searchHistories, ...data.data.keywords])]
-      }
+      const searchHistories = getItem('search-histories') || []
+      // if (this.user) {
+      //   const { data } = await getSearchHistories()
+      //   searchHistories = [...new Set([...searchHistories, ...data.data.keywords])]
+      // }
       this.searchHistories = searchHistories
     }
   }
