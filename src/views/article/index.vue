@@ -43,14 +43,18 @@
   <!-- /正文 -->
 
   <!-- 文章评论列表 -->
-  <comment-list :source="articleId"></comment-list>
+  <!-- 更新总数量 -->
+  <comment-list :source="articleId" :list="commentList" @update-total-count="totalCommentCount = $event"
+  @reply-click="onReplyClick"
+  ></comment-list>
   <!-- /文章评论列表 -->
   </div>
 
   <!-- 底部 -->
   <div class="footer">
-    <van-button class="comment" type="default" round>写评论</van-button>
-    <van-icon name="chat-o" />
+    <van-button class="comment" type="default" round @click="isPostShow = true">写评论</van-button>
+    <!-- 绑定总数量 -->
+    <van-icon name="comment-o" :info="totalCommentCount" />
     <van-icon
       :color="article.is_collected ? 'orange' : ''"
       :name="article.is_collected ? 'star' : 'star-o'"
@@ -65,6 +69,25 @@
     <van-icon name="share" />
   </div>
   <!-- /底部 -->
+
+  <!-- 发布评论 -->
+  <van-popup
+    v-model="isPostShow"
+    position="bottom"
+  >
+    <post-comment :target="articleId" @post-success="onPostSuccess"></post-comment>
+  </van-popup>
+  <!-- /发布评论 -->
+
+  <!-- 评论回复 -->
+  <van-popup
+    v-model="isReplyShow"
+    position="bottom"
+  >
+    <!-- v-if 这里目的是让组件随着弹出层的显示进行渲染和销毁,防止加载过的组件不重新渲染,导致数据不会重新加载的问题 -->
+    <comment-reply v-if="isReplyShow" :comment="replyComment" :article-id="articleId" @close="isReplyShow = false"></comment-reply>
+  </van-popup>
+  <!-- /评论回复 -->
 </div>
 </template>
 
@@ -76,11 +99,15 @@ import { getArticleById, getCollect, deleteCollect, getLike, deleteLike } from '
 import { ImagePreview } from 'vant'
 import { deleteFollow, getFollow } from '@/api/user'
 import CommentList from './components/comment-list'
+import PostComment from './components/post-comment'
+import CommentReply from './components/comment-reply'
 
 export default {
   name: 'ArticleIndex',
   components: {
-    CommentList
+    CommentList,
+    PostComment,
+    CommentReply
   },
   // 在组件中获取动态路由参数
   // 方式一: this.$router.params.articleId
@@ -95,7 +122,12 @@ export default {
     return {
       article: {},
       isFollowedLoading: false,
-      isCollectedLoading: false
+      isCollectedLoading: false,
+      isPostShow: false, // 评论的弹出状态
+      commentList: [], // 文章评论列表
+      totalCommentCount: 0, // 评论总数量
+      isReplyShow: false, // 回复是否显示
+      replyComment: {} // 当前回复评论对象
     }
   },
   computed: {},
@@ -175,6 +207,23 @@ export default {
         this.article.attitude = 1
       }
       this.$toast.success(`${this.article.attitude === 1 ? '' : '取消'}点赞成功`)
+    },
+    onPostSuccess (comment) {
+      // 把评论数据对象放到评论列表顶部
+      this.commentList.unshift(comment)
+
+      // 更新评论的总数量
+      this.totalCommentCount++
+
+      // 关闭发布评论弹出层
+      this.isPostShow = false
+    },
+    // 点击回复的评论对象 comment
+    onReplyClick (comment) {
+      console.log('onReplyClick', comment)
+      this.replyComment = comment
+      // 展示回复内容
+      this.isReplyShow = true
     }
   }
 }

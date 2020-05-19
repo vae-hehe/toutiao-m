@@ -12,3 +12,30 @@ export const getCommentList = params => {
     params
   })
 }
+
+// 评论/回复点赞
+export const getCommentLike = commentId => {
+  return request({
+    method: 'POST',
+    url: '/app/v1_0/comment/likings',
+    data: {
+      target: commentId
+    }
+  })
+}
+
+export const deleteCommentLike = commentId => {
+  return request({
+    method: 'DELETE',
+    url: `/app/v1_0/comment/likings/${commentId}`
+  })
+}
+
+// 添加评论或评论回复
+export const addComment = data => {
+  return request({
+    method: 'POST',
+    url: '/app/v1_0/comments',
+    data
+  })
+}
