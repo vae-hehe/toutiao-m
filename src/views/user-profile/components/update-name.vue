@@ -11,7 +11,7 @@
   <!-- /导航栏 -->
   <div class="name-filed-wrap">
     <van-field
-      v-model="message"
+      v-model="localName"
       rows="2"
       autosize
       type="textarea"
@@ -24,13 +24,21 @@
 </template>
 
 <script>
+import { updateUserProfile } from '@/api/user'
+
 export default {
   name: 'UpdateName',
   components: {},
-  props: {},
+  props: {
+    name: {
+      type: String,
+      required: true
+    }
+  },
   data () {
     return {
-      message: ''
+      // 使用 name 的值进行初始化
+      localName: this.name
     }
   },
   computed: {},
@@ -38,7 +46,27 @@ export default {
   created () {},
   mounted () {},
   methods: {
-    onConfirm () {}
+    async onConfirm () {
+      this.$toast.loading({
+        message: '保存中...',
+        forbidclick: true
+      })
+      try {
+        // 请求提交更新用户昵称
+        await updateUserProfile({
+          name: this.localName
+        })
+        // 更新成功 -> 修改父组件的 name -> 关闭弹出层
+        this.$emit('update-name', this.localName)
+        this.$emit('close')
+
+        this.$toast.success('保存成功')
+      } catch (err) {
+        if (err && err.response && err.response.status === 409) {
+          this.$toast.fail('昵称已存在')
+        }
+      }
+    }
   }
 }
 </script>

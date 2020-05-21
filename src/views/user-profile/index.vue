@@ -41,6 +41,8 @@
     :style="{ height: '100%' }"
   >
     <update-name
+      :name="user.name"
+      @update-name="user.name = $event"
       @close="isEditNameShow = false"
     ></update-name>
   </van-popup>
