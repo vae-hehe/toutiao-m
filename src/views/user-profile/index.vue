@@ -10,7 +10,8 @@
   <!-- /导航栏 -->
 
   <!-- value 里面只能放文本 -->
-  <van-cell title="头像" is-link center>
+  <input type="file" hidden ref="file">
+  <van-cell title="头像" is-link center @click="$refs.file.click()">
     <van-image
       class="photo"
       :src="user.photo"
