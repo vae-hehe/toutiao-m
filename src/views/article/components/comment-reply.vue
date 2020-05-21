@@ -67,7 +67,7 @@ export default {
   data () {
     return {
       isPostShow: false,
-      commentList: [] // 评论额回复列表
+      commentList: [] // 评论回复列表
     }
   },
   computed: {},
@@ -95,12 +95,11 @@ export default {
   box-sizing: border-box;
   background-color: #fff;
   position: fixed;
-  bottom: 0;
+  bottom: 5px;
   .comment {
     width: 100%;
     height: 45px;
     color: #a7a7a7;
-    margin-left: 12px;
     margin-right: 20px;
   }
 }
