@@ -30,15 +30,18 @@ export default {
   name: 'UpdateName',
   components: {},
   props: {
-    name: {
+    value: {
       type: String,
       required: true
+    },
+    gender: {
+      type: Number
     }
   },
   data () {
     return {
       // 使用 name 的值进行初始化
-      localName: this.name
+      localName: this.value
     }
   },
   computed: {},
@@ -57,7 +60,8 @@ export default {
           name: this.localName
         })
         // 更新成功 -> 修改父组件的 name -> 关闭弹出层
-        this.$emit('update-name', this.localName)
+        // this.$emit('update-name', this.localName)
+        this.$emit('input', this.localName)
         this.$emit('close')
 
         this.$toast.success('保存成功')

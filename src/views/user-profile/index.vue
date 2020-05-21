@@ -35,14 +35,51 @@
     :value="user.birthday"
   />
 
+  <!--
+    当传递给子组件的数据及要使用又要修改, 例如这里的 name
+    这是可以使用 v-model 简写
+    本质还是 子传父
+  -->
   <van-popup
     v-model="isEditNameShow"
     position="bottom"
     :style="{ height: '100%' }"
   >
-    <update-name
+    <!-- <update-name
       :name="user.name"
       @update-name="user.name = $event"
+      @close="isEditNameShow = false"
+    ></update-name> -->
+
+    <!--
+      v-model="user.name"
+        默认传递一个名字叫 value 的数据
+        :value="user.name"
+        默认监听 input 事件
+        @input="user.name = $event"
+      v-model 的本质还是父子组件通信, 它仅仅简化了父组件的通信, 子组件还是一样, 但是要绑定的数据必须是 value 和 input
+    -->
+
+    <!--
+      v-model 只能使用一次
+    -->
+
+    <!--
+      如果有多个数据保持同步, 使用 .sync 修饰符, 可以有多个
+      :gender="user.gender"
+      @update-gender="user.gender = $event"
+
+      :gender.sync="user.gender"
+        :gender="user.gender"
+        @update:gender="user.gender = $event"
+        @update:属性名称="user.gender = $event"
+
+      我们一般把最常用的数据设计为 v-model 绑定, 把不太常用的数据设计为 .sync
+    -->
+
+    <update-name
+      v-if="isEditNameShow"
+      v-model="user.name"
       @close="isEditNameShow = false"
     ></update-name>
   </van-popup>
