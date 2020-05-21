@@ -28,6 +28,7 @@
     title="性别"
     is-link
     :value="user.gender === 1 ? '女' : '男' "
+    @click="isEditGenderShow = true"
   />
   <van-cell
     title="生日"
@@ -40,6 +41,7 @@
     这是可以使用 v-model 简写
     本质还是 子传父
   -->
+  <!-- 修改昵称 -->
   <van-popup
     v-model="isEditNameShow"
     position="bottom"
@@ -77,29 +79,46 @@
       我们一般把最常用的数据设计为 v-model 绑定, 把不太常用的数据设计为 .sync
     -->
 
+    <!-- 每次重新加载昵称数据 -->
     <update-name
       v-if="isEditNameShow"
       v-model="user.name"
       @close="isEditNameShow = false"
     ></update-name>
   </van-popup>
+  <!-- /修改昵称 -->
+
+  <!-- 修改性别 -->
+  <van-popup
+    v-model="isEditGenderShow"
+    position="bottom"
+  >
+    <update-gender
+      @close="isEditGenderShow = false"
+      v-model="user.gender"
+    ></update-gender>
+  </van-popup>
+  <!-- /修改性别 -->
 </div>
 </template>
 
 <script>
 import { getUserProfile } from '@/api/user'
 import UpdateName from './components/update-name'
+import UpdateGender from './components/update-gender'
 
 export default {
   name: 'UserProfile',
   components: {
-    UpdateName
+    UpdateName,
+    UpdateGender
   },
   props: {},
   data () {
     return {
       user: {},
-      isEditNameShow: false
+      isEditNameShow: false, // 昵称的弹出层
+      isEditGenderShow: false // 性别弹出层
     }
   },
   computed: {},

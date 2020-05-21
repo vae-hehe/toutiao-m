@@ -33,9 +33,6 @@ export default {
     value: {
       type: String,
       required: true
-    },
-    gender: {
-      type: Number
     }
   },
   data () {
