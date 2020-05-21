@@ -75,6 +75,9 @@ export default {
 </script>
 
 <style scoped lang="less">
+.update-photo {
+  height: 100%;
+}
 .toolbar {
   background-color: #000;
   position: fixed;
