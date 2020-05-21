@@ -10,7 +10,14 @@
   <!-- /导航栏 -->
 
   <!-- value 里面只能放文本 -->
-  <input type="file" hidden ref="file">
+  <!-- accept 选择什么类型的文件, image/* 只选图片, 手机兼容 -->
+  <input
+    type="file"
+    hidden
+    ref="file"
+    accept="image/*"
+    @change="onFileChange"
+  >
   <van-cell title="头像" is-link center @click="$refs.file.click()">
     <van-image
       class="photo"
@@ -114,6 +121,21 @@
     ></update-birthday>
   </van-popup>
   <!-- /修改生日 -->
+
+  <!-- 修改头像 -->
+  <van-popup
+    v-model="isEditPhotoShow"
+    position="bottom"
+    style="height:100%"
+  >
+    <update-photo
+      v-if="isEditPhotoShow"
+      @close="isEditPhotoShow = false"
+      :file="previewImage"
+      @upate-photo="user.photo = $event"
+    ></update-photo>
+  </van-popup>
+  <!-- /修改头像 -->
 </div>
 </template>
 
@@ -122,13 +144,15 @@ import { getUserProfile } from '@/api/user'
 import UpdateName from './components/update-name'
 import UpdateGender from './components/update-gender'
 import UpdateBirthday from './components/update-birthday'
+import UpdatePhoto from './components/update-photo'
 
 export default {
   name: 'UserProfile',
   components: {
     UpdateName,
     UpdateGender,
-    UpdateBirthday
+    UpdateBirthday,
+    UpdatePhoto
   },
   props: {},
   data () {
@@ -136,7 +160,9 @@ export default {
       user: {},
       isEditNameShow: false, // 昵称的弹出层
       isEditGenderShow: false, // 性别弹出层
-      isEditBirthdayShow: false
+      isEditBirthdayShow: false,
+      isEditPhotoShow: false, // 编辑头像显示状态
+      previewImage: null // 上传预览图片
     }
   },
   computed: {},
@@ -149,6 +175,17 @@ export default {
     async loadUserProfile () {
       const { data } = await getUserProfile()
       this.user = data.data
+    },
+    // input 中的内容发生改变的时候就会触发, 原生事件
+    onFileChange () {
+      // 展示弹出层
+      this.isEditPhotoShow = true
+      // 在弹出层中预览图片
+      const file = this.$refs.file.files[0]
+      // const blob = window.URL.createObjectURL(this.$refs.file.files[0])
+      this.previewImage = file
+      // 解决相同文件不触发 change 事件的问题, 手动清空 file 的 value
+      this.$refs.file.value = ''
     }
   }
 }
