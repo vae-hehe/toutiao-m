@@ -34,6 +34,7 @@
     title="生日"
     is-link
     :value="user.birthday"
+    @click="isEditBirthdayShow = true"
   />
 
   <!--
@@ -99,6 +100,19 @@
     ></update-gender>
   </van-popup>
   <!-- /修改性别 -->
+
+  <!-- 修改生日 -->
+  <van-popup
+    v-model="isEditBirthdayShow"
+    position="bottom"
+  >
+    <update-birthday
+      v-if="isEditBirthdayShow"
+      @close="isEditBirthdayShow = false"
+      v-model="user.birthday"
+    ></update-birthday>
+  </van-popup>
+  <!-- /修改生日 -->
 </div>
 </template>
 
@@ -106,19 +120,22 @@
 import { getUserProfile } from '@/api/user'
 import UpdateName from './components/update-name'
 import UpdateGender from './components/update-gender'
+import UpdateBirthday from './components/update-birthday'
 
 export default {
   name: 'UserProfile',
   components: {
     UpdateName,
-    UpdateGender
+    UpdateGender,
+    UpdateBirthday
   },
   props: {},
   data () {
     return {
       user: {},
       isEditNameShow: false, // 昵称的弹出层
-      isEditGenderShow: false // 性别弹出层
+      isEditGenderShow: false, // 性别弹出层
+      isEditBirthdayShow: false
     }
   },
   computed: {},
