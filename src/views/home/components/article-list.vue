@@ -1,5 +1,5 @@
 <template>
-<div class="article-list">
+<div class="article-list" ref="article-list">
   <van-pull-refresh
     :success-text="refreshSuccessText"
     :success-duration="1500"
@@ -26,6 +26,8 @@
 <script>
 import { getArticles } from '@/api/article'
 import ArticleItem from '@/components/article-item/'
+import { debounce } from 'lodash'
+
 export default {
   name: 'ArticleList',
   components: {
@@ -50,7 +52,20 @@ export default {
   computed: {},
   watch: {},
   created () {},
-  mounted () {},
+  mounted () {
+    // 监听列表的滚动事件
+    const articleList = this.$refs['article-list']
+    // 设置防抖
+    articleList.onscroll = debounce(() => {
+      // 设置记住当前滚动的位置
+      this.scrollTop = articleList.scrollTop
+    }, 50)
+  },
+  activated () {
+    // 从缓存中被激活
+    // 将记住的位置, 重新设置给列表
+    this.$refs['article-list'].scrollTop = this.scrollTop
+  },
   methods: {
     async onLoad () {
       // 异步更新数据
