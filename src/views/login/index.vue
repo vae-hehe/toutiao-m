@@ -132,7 +132,8 @@ export default {
         this.$store.commit('setUser', data.data)
 
         // 登录成功, 跳转到原来的界面
-        this.$router.back()
+        // this.$router.back()
+        this.$router.push(this.$route.query.redirect || '/')
       } catch (err) {
         console.log(err)
         Toast.fail('登陆失败, 手机号或验证码错误')

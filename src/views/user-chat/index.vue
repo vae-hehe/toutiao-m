@@ -102,6 +102,7 @@ export default {
 
     scrollToBottom () {
       const list = this.$refs['message-list']
+      // 让页面最达能滚动的距离 赋值给 距离顶部的距离 达到的效果是 页面显示在最底部
       list.scrollTop = list.scrollHeight
     }
   }
