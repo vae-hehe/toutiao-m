@@ -50,7 +50,7 @@ request.interceptors.response.use(function (response) {
   // 所有的成功响应进入这里
   return response
 }, async function (error) {
-  // 所有的不是300的状态码进入这里
+  // 所有的不是200的状态码进入这里
   const status = error.response.status
   if (status === 400) {
     Toast.fail('客户端参数错误')
